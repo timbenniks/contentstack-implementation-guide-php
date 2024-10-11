@@ -1,0 +1,13 @@
+{
+  "name": "contentstack-implementation-guide-php",
+  "version": "0.0.0",
+  "description": "contentstack-implementation-guide-php",
+  "author": "Tim Benniks <tbenniks@gmail.com>",
+  "homepage": "https://timbenniks.dev",
+  "license": "MIT",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/timbenniks/contentstack-implementation-guide-php"
+  }
+}
