@@ -5,25 +5,39 @@ const ENVIRONMENT = 'preview';
 const PREVIEW_TOKEN = 'csa128deacffe0b26386090915';
 const REGION = 'EU';
 const LANG = 'en-us';
-const BASEURL= REGION == 'EU' ? 'eu-rest-preview.contentstack.com' : 'rest-preview.contentstack.com';
 const HOSTURL = REGION == 'EU' ? 'eu-app.contentstack.com' : 'app.contentstack.com';
 
-$content_type_uid = $_GET['content_type_uid'] ?? '';
-$entry_uid = $_GET['entry_uid'] ?? '';
+$baseurl = REGION == 'EU' ? "eu-cdn.contentstack.com" : "cdn.contentstack.com";
+$content_type_uid = $_GET['content_type_uid'] ?? 'page';
+$entry_uid = $_GET['entry_uid'] ?? 'blte55cf3411ecaee0e';
 $live_preview = $_GET['live_preview'] ?? '';
+
+if ($live_preview) {
+  $baseurl = REGION == 'EU' ? "eu-rest-preview.contentstack.com" : "rest-preview.contentstack.com";
+}
 
 function makeApiRequest($url, $live_preview) {
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, [
-    'Content-Type: application/json',
-    'api_key: ' . API_KEY,
-    'preview_token: ' . PREVIEW_TOKEN,
-    'live_preview: ' . $live_preview,
-    'access_token: ' . DELIVERY_TOKEN
-  ]);
-    
+  
+  if($live_preview) {
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      'Content-Type: application/json',
+      'api_key: ' . API_KEY,
+      'preview_token: ' . PREVIEW_TOKEN,
+      'live_preview: ' . $live_preview,
+      'access_token: ' . DELIVERY_TOKEN
+    ]);
+  }
+  else {
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+      'Content-Type: application/json',
+      'api_key: ' . API_KEY,
+      'access_token: ' . DELIVERY_TOKEN
+    ]);
+  }
+      
   $response = curl_exec($ch);
   curl_close($ch);
   return json_decode($response, true) ?? [];
@@ -33,8 +47,8 @@ function createEditableTags($content_type_uid, $entry_uid, $lang, $field) {
   return sprintf('data-cslp=%s.%s.%s.%s', $content_type_uid, $entry_uid, $lang, $field);
 }
 
-$url = sprintf('https://%s/v3/content_types/%s/entries/%s?environment=%s', BASEURL, urlencode($content_type_uid), urlencode($entry_uid), ENVIRONMENT);
-$result = makeApiRequest($url, $live_preview);
+$url = sprintf('https://%s/v3/content_types/%s/entries/%s?environment=%s', $baseurl, urlencode($content_type_uid), urlencode($entry_uid), ENVIRONMENT);
+$result = makeApiRequest($url, $live_preview ? $live_preview : null);
 $page = $result['entry']
 ?>
 <!DOCTYPE html>
@@ -78,7 +92,6 @@ $page = $result['entry']
           entry_uid: <code><?= htmlspecialchars($entry_uid) ?></code>
         </li>
       </ul>
-
       
       <?php if (isset($page['title']) && $page['title']): ?>
         <h1 class="text-4xl font-bold mb-4"
@@ -111,7 +124,7 @@ $page = $result['entry']
         </div>
       <?php endif; ?>
     </section>
-    
+
   </main>
 </body>
 </html>
