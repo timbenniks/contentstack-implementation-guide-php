@@ -46,10 +46,11 @@ $page = $result['entry']
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script type="module">
-      import ContentstackLivePreview from 'https://esm.sh/@contentstack/live-preview-utils@2.0.4';
+      import ContentstackLivePreview from 'https://esm.sh/@contentstack/live-preview-utils@3.0.1';
       ContentstackLivePreview.init({
         ssr: true,
         enable: true,
+        mode: "preview",
         stackDetails: {
           apiKey: "<?=API_KEY?>",
           environtment: "<?=ENVIRONMENT?>"
@@ -78,6 +79,7 @@ $page = $result['entry']
         </li>
       </ul>
 
+      
       <?php if (isset($page['title']) && $page['title']): ?>
         <h1 class="text-4xl font-bold mb-4"
           <?= createEditableTags($content_type_uid, $entry_uid, LANG, "title") ?>>
@@ -109,6 +111,7 @@ $page = $result['entry']
         </div>
       <?php endif; ?>
     </section>
+    
   </main>
 </body>
 </html>
