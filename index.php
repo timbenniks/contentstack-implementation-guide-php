@@ -60,11 +60,11 @@ $page = $result['entry']
     <script src="https://cdn.tailwindcss.com"></script>
 
     <script type="module">
-      import ContentstackLivePreview from 'https://esm.sh/@contentstack/live-preview-utils@3.0.1';
+      import ContentstackLivePreview from 'https://esm.sh/@contentstack/live-preview-utils@3.1.0';
       ContentstackLivePreview.init({
         ssr: true,
         enable: true,
-        mode: "preview",
+        mode: "builder",
         stackDetails: {
           apiKey: "<?=API_KEY?>",
           environtment: "<?=ENVIRONMENT?>"
